@@ -54,7 +54,7 @@ def crawl_story_names(page_number: int) -> Optional[list[Story]]:
         if not elements:
             return []
         for e in elements:
-            link = f"{reflex_url}{e.a.get('href')}"
+            link = f"{e.a.get('href')}"
             name = e.a.get('title')
             img_cover = e.a.span.img.get('data-src')
             storys[name] = Story(name, img_cover, link)
@@ -67,7 +67,7 @@ def crawl_story_names(page_number: int) -> Optional[list[Story]]:
 
         for e in elements:
             name = e.h3.a.string
-            storys[name].chapter_link = f"{reflex_url}{e.ul.li.a.get('href')}"
+            storys[name].chapter_link = f"{e.ul.li.a.get('href')}"
             storys[name].chapter = e.ul.li.a.get('href').split("/")[-1].capitalize()
             storys[name].chapter_release = e.ul.li.a.span.string
             storys[name].number_view = e.find('span', class_="num-view").string
@@ -123,7 +123,7 @@ class Chapter:
 
 
 def crawl_list_chapters(story_name: str) -> Optional[Story]:
-    url = f"https://aquastarsleep.co.uk/truyen-tranh/{story_name}"
+    url = f"{root_url}/truyen-tranh/{story_name}"
     try:
         response = requests.get(url, headers = headers, timeout=15)
 
@@ -146,7 +146,7 @@ def crawl_list_chapters(story_name: str) -> Optional[Story]:
         
         for e in elements:        
             chapter_name = e.a.get('title')
-            link_chapter = f"{reflex_url}{e.a.get('href')}"
+            link_chapter = f"{e.a.get('href')}"
             time = e.find_all('span')[0].string.strip()
             number_view = e.find_all('span')[1].string.strip()
             list_chapters.append(Chapter(chapter_name, link_chapter, time, number_view))
@@ -196,7 +196,7 @@ def crawl_chapter_images(story_name: str, chapter_number: str) -> Optional[List[
 
     #Xây dựng URL mục tiêu
     # base_manga_name = "vo-luyen-dinh-phong"
-    url = f"https://aquastarsleep.co.uk/truyen-tranh/{story_name}/{chapter_number}"
+    url = f"{root_url}/truyen-tranh/{story_name}/{chapter_number}"
 
     try:
         response = requests.get(url, headers = headers, timeout=15)
