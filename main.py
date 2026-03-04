@@ -287,3 +287,7 @@ async def get_chapter_data(story_name: str, chapter_number: str):
         "total_images": len(img_list),
         "images": img_list
     }
+
+@app.get("/")
+def home():
+    return {"message": "API Manga is online", "docs": "/docs"}
