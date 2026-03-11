@@ -67,6 +67,7 @@ def crawl_story_names(page_number: int) -> Optional[list[Story]]:
         if response.status_code != 200:
             return None
         soup = BeautifulSoup(response.content, 'html.parser')
+        raise HTTPException(status_code=404, detail=f"Not found story in page: {soup}")
 
         storys = {}
 
@@ -118,7 +119,7 @@ async def get_story_name(page_number: int):
     storys = crawl_story_names(page_number)
 
     if storys is None:
-        raise HTTPException(status_code=404, detail=f"Not found story{page_number}")
+        raise HTTPException(status_code=404, detail=f"Not found story in page: {page_number}")
 
     if not storys:
         raise HTTPException(status_code=404, detail=f"Found a web but there is no story in page{page_number}, the structure of HTML can be change")
@@ -195,7 +196,7 @@ async def get_chapter_list(story_name: str):
     story = crawl_list_chapters(story_name)
 
     if story is None:
-        raise HTTPException(status_code=404, detail=f"Not found story{story_name}")
+        raise HTTPException(status_code=404, detail=f"Not found story {story_name}")
     if not story:
         raise HTTPException(status_code=404, detail="Found web but there is no chapters") 
     
@@ -277,7 +278,7 @@ async def get_chapter_data(story_name: str, chapter_number: str):
     # print(img_list)
 
     if img_list is None:
-        raise HTTPException(status_code=404, detail=f"Not found chapter{chapter_number}")
+        raise HTTPException(status_code=404, detail=f"Not found chapter {chapter_number}")
 
     if not img_list:
         raise HTTPException(status_code=404, detail=f"Found web but there is no image in {chapter_number}, The stucture of HTML can be change")
