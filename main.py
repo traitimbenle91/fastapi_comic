@@ -63,6 +63,7 @@ def crawl_story_names(page_number: int) -> Optional[list[Story]]:
     
     try:
         response = requests.get(url = url, headers=headers, timeout=15)
+        raise HTTPException(status_code=404, detail=f"Not found story in page: {response}")
 
         if response.status_code != 200:
             return None
